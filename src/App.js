@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import "./App.css";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [myFact, setMyFact] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("https://catfact.ninja/fact")
+      .then((res) => {
+        console.log(res.data);
+        setMyFact(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  function refreshComponent() {
+    // window.location.reload(false); // using vanilla JS
+    axios.get("https://catfact.ninja/fact").then((res) => {
+      console.log(res.data);
+      setMyFact(res.data);
+    });
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Fact by AP</h1>
+      <h2 className="facts">{myFact.fact}</h2>
+      <button className="refBtn" onClick={refreshComponent}>
+        Refresh to get new fact
+      </button>
     </div>
   );
 }
